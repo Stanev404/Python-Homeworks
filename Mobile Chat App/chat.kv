@@ -1,0 +1,259 @@
+#:import C kivy.utils.get_color_from_hex
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#:import Factory kivy.factory.Factory
+
+
+<BoxLayout>:
+    #padding: 10
+    spacing: 10
+
+
+
+<Label>:
+    font_size: 25
+
+<TextInput>:
+    font_size: 30
+    multiline: False
+    padding: [10, 0.5 * (self.height - self.line_height)]
+
+<ScrollView>:
+    canvas.before:
+        Color:
+            rgba: 0.157, 0.569, 0.91, 1.0
+        Rectangle:
+            pos: self.pos
+            size: self.size
+<ChatLabel@Label>:
+    color: C('#101010')
+	font_size: 75
+    text_size: (self.width, None)
+    halign: 'left'
+    valign: 'top'
+    #padding: (-10, 0)  # fixed in Kivy 1.8.1
+    size_hint: (1, None)
+    height: self.texture_size[1]
+    markup: True
+	
+	
+<MyPopup@Popup>:
+	title: "About this app"
+    auto_dismiss: True
+	
+		
+    
+	
+	size_hint: (None, None)
+	size: (600,900)
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			text: '   Nie sme \n produktivna firma :)'
+			font_size: 70
+			
+		Button:
+			text: 'Close me!'
+			font_size: 75
+			width: 200
+			height: 170
+		
+			size_hint_y: None
+			size_hint_x: 1
+			on_release: root.dismiss()
+			
+	
+<OnlinePopup@Popup>:
+	title: "People in chat:"
+	font_size: 150
+    auto_dismiss: True
+	size_hint: (None, None)
+	size: (600,900)
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			text: 'tuka sa horata'
+			font_size: 70
+		Button:
+			text: 'Close me!'
+			font_size: 75
+			width: 200
+			height: 170
+		
+			size_hint_y: None
+			size_hint_x: 1
+			on_release: root.dismiss()		
+				
+<NamePopup@Popup>:
+	title: "Enter your new nickname:"
+    auto_dismiss: True
+	size_hint: (None, None)
+	size: (600,550)
+	BoxLayout:
+		orientation: 'vertical'
+		TextInput:
+			#id: nickname eventualno da zemesh novoto ime tuk po id
+			#size:(20,20)
+			size_hint: (1, 1)
+			width: 175
+			height: 50
+			font_size: 45
+			multiline: False
+			hint_text: 'Enter a name..'
+			
+		Button:
+			text: 'Change Name'
+			font_size: 75
+			width: 200
+			height: 170
+		
+			size_hint_y: None
+			size_hint_x: 1
+			on_release: root.dismiss() #rootdismis-a go slagame vuv funkciata koqto promenq imeto i neq vikame tuk 
+
+
+
+
+
+			
+ScreenManager:
+	Screen:
+		name: 'login_screen'
+		GridLayout:
+			spacing: 10
+			orientation: 'vertical'
+			canvas.before:
+				Color:
+					rgba: 0.157, 0.569, 0.91, 1.0
+				Rectangle:
+					pos: self.pos
+					size: self.size
+
+			Label:
+				center_x: root.width / 2
+				top: root.top - 80
+				# size_hint_x: 1
+				# size_hint_y: None
+				font_size: 90 #eventsize
+				#font_name: 'Forte'
+				text: "Welcome to WokiTalkie!"
+		
+			TextInput:
+				id: nickname
+				font_size: 50 #eventsize
+				height: 110
+				width: 650 #eventsize
+				center_x: root.width / 2
+				top: root.top - 500
+				multiline: False
+				text: ""
+				hint_text: 'Choose nickname wisely...'
+		
+			TextInput:
+				id: host
+				center_x: root.width / 2
+				top: root.top - 750
+				height: 100
+				width: 650
+				font_size: 50 #eventsize
+				multiline: False
+				text: "192.168.1.102"
+				hint_text: 'Enter server address'
+		
+			Button:
+				text: "Login"
+				center_x: root.width / 2
+				top: root.top - 1040
+				font_size: 50
+				#padding: (50,0)
+				width: 280
+				#height : 30
+				on_press: app.connect()
+				on_release: msg_input.focus=True
+
+	Screen:
+		name: 'chat_room'
+		BoxLayout:
+			orientation: 'vertical'
+			canvas.before:
+                Color:
+                    rgba: 0.157, 0.569, 0.91, 1.0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+			BoxLayout:
+				orientation: 'horizontal'
+				padding: (40,0)
+				size_hint_x: 1
+				size_hint_y: None
+				height:200
+				Button:
+				    size: 200,200
+					size_hint: None, None
+					background_normal: 'exit_first.png'
+					background_down: 'exit_second.png'
+					border: 0,0,0,0
+					#on_press: app.sendMsg()
+					#on_release: msg_input.focus=True
+				Button:
+					size: 200,200
+					border: 0,0,0,0
+					padding: (10,0)
+					size_hint: None, None
+					background_normal: 'Info_icon.png'
+					background_down: 'Info_icon_after.png'
+					on_release: Factory.MyPopup().open()
+				Button:
+					size: 200,200
+					border: 0,0,0,0
+					padding: (10,0)
+					size_hint: None, None
+					background_normal: 'online_people.png'
+					on_release: Factory.OnlinePopup().open()
+				Button:
+					size: 200,200
+					border: 0,0,0,0
+					padding: (10,0)
+					size_hint: None, None
+					background_normal: 'change_name.png'
+					on_release: Factory.NamePopup().open()
+			
+			BoxLayout:
+				orientation: 'horizontal'
+				ScrollView:
+					id:scrollViewChat
+					ChatLabel:
+
+						id: chatLabel
+						text: ''
+			BoxLayout:
+				orientation: 'horizontal'
+				padding:0
+				size_hint: (1,None)
+				height:50
+				TextInput:
+					size_hint: None, None
+					size: 910,150
+					id: msg_input
+					font_size:85
+					#focus:True
+					hint_text: 'Right something smart...'
+					on_text_validate: app.sendMsg()
+				
+				Button:
+				    size: 150,150
+					#text:'ok'
+					font_size: 80
+
+					size_hint: None, None
+					background_normal: 'send_arrow.png'
+					background_down: 'send_down.png'
+					border: 5,5,5,5
+					on_press: app.sendMsg()
+					on_release: msg_input.focus=True
+			BoxLayout:
+				orientation:'horizontal'
+				padding:0
+				size_hint:(1,None)
+				height:770
+
+							
