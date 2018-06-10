@@ -7,5 +7,5 @@
 * Sockets
 * Front-End
 
-![](Screenshot_1.png)
-![](Screenshot_2.png)
+![](Screenshot_1.jpg)
+![](Screenshot_2.jpg)
